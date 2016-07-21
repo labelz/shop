@@ -1,0 +1,18 @@
+<div ng-controller="AddSellCtrl">
+    <div class="form-group">
+        <label for="prod">สินค้า:</label>
+    <select ng-model="selectedProduct" class="form-control" ng-options="product.id as product.name for product in products" id="prod"></select>
+    </div>
+    <div class="form-group">
+        <label for="quan">จำนวน:</label>
+        <input type="number" ng-model="quantity" class="form-control" id="quan">
+    </div>
+    <div class="form-group">
+        <label for="price">ราคา:</label>
+        <input type="number" ng-model="price" class="form-control" id="price">
+    </div>
+    <div align="right">
+        <button type="button" ng-click="save()" class="btn btn-primary btn-md">เพิ่ม</button>
+        <button type="button" ng-click="closeThisDialog('')" class="btn btn-primary btn-md">ยกเลิก</button>
+    </div>
+</div>

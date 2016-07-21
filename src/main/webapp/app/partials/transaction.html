@@ -1,0 +1,31 @@
+<div ng-controller="TransactionCtrl">
+    <div class="container">
+        <h2>รายการ</h2>
+        <button type="button" ng-click="addSell()" class="btn btn-primary btn-md">เพิ่มรายการขาย</button>
+        <button type="button" ng-click="addBuy()"class="btn btn-primary btn-md">เพิ่มรายการซื้อ</button>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr style="font-weight: bold">
+                <td colspan="3">Summary</td>
+                <td>{{summary}}</td>
+            </tr>
+            </tfoot>
+            <tbody>
+            <tr ng-repeat="trans in transactions">
+                <td>{{trans.datetime}}</td>
+                <td>{{trans.product.name}}</td>
+                <td>{{trans.quantity}}</td>
+                <td>{{trans.sellPrice}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
