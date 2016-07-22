@@ -4,10 +4,14 @@
 
     var as = angular.module('myApp.controllers', []);
 
-as.controller('MainController', function($scope,$rootScope, AuthService, USER_ROLES,ngDialog,$state) {
-    $rootScope.currentUser = null;
-    $scope.userRoles = USER_ROLES;
-    $scope.isAuthorized = AuthService.isAuthorized;
+as.controller('MainController', function($scope,$rootScope, AuthService, USER_ROLES,ngDialog) {
+    if(!AuthService.isAuthenticated()){
+        $rootScope.currentUser = null;
+        $scope.userRoles = USER_ROLES;
+        $scope.isAuthorized = AuthService.isAuthorized;
+    }else{
+        $rootScope.currentUser = AuthService.getUser();
+    }
 
 
     $scope.login = function(){
@@ -19,12 +23,10 @@ as.controller('MainController', function($scope,$rootScope, AuthService, USER_RO
             }
         });
     }
-
-    $scope.testC = function(){
-        console.log("test123");
-        $state.go('transaction');
+    $scope.logout = function(){
+        AuthService.logout();
+        $rootScope.currentUser = null;
     }
-
 
 });
 as.controller('LoginCtrl', function($scope, $rootScope, AUTH_EVENTS, AuthService) {
@@ -36,7 +38,7 @@ as.controller('LoginCtrl', function($scope, $rootScope, AUTH_EVENTS, AuthService
     $scope.login = function (credentials) {
         AuthService.login(credentials).then(function (user) {
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-            $rootScope.currentUser = user;
+            $rootScope.currentUser = user.name;
             $scope.closeThisDialog('');
         }, function () {
             $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
@@ -82,21 +84,69 @@ as.controller('TransactionCtrl', function($scope,WDService,ngDialog) {
         });
     }
 
+    $scope.edit = function(transaction){
+
+
+        $scope.trans = transaction
+
+        ngDialog.open({
+            template: 'partials/add_sell.html',
+            controller: 'AddSellCtrl',
+            scope: $scope,
+            preCloseCallback:function(){
+                $scope.loadTransaction();
+            }
+        });
+    }
+
+    $scope.delete = function(trans){
+        WDService.deleteTransaction(trans.id).then(function(resp){
+            $scope.loadTransaction();
+        });
+    }
+
     $scope.message = "Rooodroood";
     $scope.name = '';
 
 });
 
+function getDateString(){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
+    var hour = today.getHours();
+    var min = today.getMinutes();
+    var sec = today.getSeconds();
+    return yyyy+'-'+mm+'-'+dd+'T'+hour+':'+min+':'+sec+'Z';
+}
+
 as.controller('AddSellCtrl', function($scope,WDService) {
+    if($scope.trans){
+        $scope.mode = 'edit';
+    }else{
+        $scope.mode = 'new';
+    }
     WDService.getProduct().then(function(resp){
         $scope.products = resp.data;
         $scope.selectedProduct = resp.data[1].id;
     });
 
     $scope.save = function(){
-        WDService.saveTransaction($scope.selectedProduct,0,$scope.quantity,$scope.price).then(function(resp){
-            $scope.closeThisDialog('');
-        });
+        if($scope.mode=='new') {
+            $scope.trans.datetime = getDateString();
+            WDService.createTransaction($scope.trans).then(function (resp) {
+                $scope.closeThisDialog('');
+            });
+        }else{
+            $scope.trans.datetime = getDateString();
+            WDService.editTransaction($scope.trans).then(function (resp) {
+                $scope.closeThisDialog('');
+            });
+        }
+        // WDService.saveTransaction($scope.selectedProduct,0,$scope.quantity,$scope.price).then(function(resp){
+        //     $scope.closeThisDialog('');
+        // });
     }
 });
 

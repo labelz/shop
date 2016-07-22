@@ -1,9 +1,16 @@
 package shopproject
 
 import grails.converters.JSON
+import grails.rest.RestfulController
 
-class ProductController {
+class ProductController extends RestfulController{
     def productService
+    static responseFormats = ['json', 'xml']
+
+    ProductController() {
+        super(Product)
+    }
+
     def index() { }
     def insert(){
         def name = request.JSON.name

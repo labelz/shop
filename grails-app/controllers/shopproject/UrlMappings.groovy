@@ -8,7 +8,8 @@ class UrlMappings {
                 // apply constraints here
             }
         }
-
+        "/products"(resources:"product")
+        "/transactions"(resources:"transaction")
         "/"(view:"/index")
         "500"(view:'/error')
         "404"(view:'/notFound')

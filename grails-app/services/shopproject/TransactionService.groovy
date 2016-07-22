@@ -25,14 +25,14 @@ class TransactionService {
     def get(){
 
         def transaction = Transaction.getAll()
-        println(transaction.product.name)
+        println(transaction.datetime)
         return transaction
     }
 
     def getTodaySell(){
         def today = new Date().clearTime()
         def transaction = Transaction.findAllByDatetimeGreaterThanAndSellPriceGreaterThan(today,0)
-        println(transaction.product.name)
+        println(transaction.datetime)
         return transaction
     }
 

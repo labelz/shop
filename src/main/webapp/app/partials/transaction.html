@@ -10,12 +10,13 @@
                 <th>Description</th>
                 <th>Quantity</th>
                 <th>Price</th>
+                <th></th>
             </tr>
             </thead>
             <tfoot>
             <tr style="font-weight: bold">
                 <td colspan="3">Summary</td>
-                <td>{{summary}}</td>
+                <td colspan="2">{{summary}}</td>
             </tr>
             </tfoot>
             <tbody>
@@ -24,6 +25,12 @@
                 <td>{{trans.product.name}}</td>
                 <td>{{trans.quantity}}</td>
                 <td>{{trans.sellPrice}}</td>
+                <td>
+                    <button type="button" ng-click="edit(trans)" class="btn btn-info">
+                        <span class="glyphicon glyphicon-edit"></span> </button>
+                    <button type="button" ng-really-message="ต้องการจะลบ?" ng-really-click="delete(trans)" class="btn btn-info">
+                    <span class="glyphicon glyphicon-trash"></span> </button>
+                </td>
             </tr>
             </tbody>
         </table>

@@ -1,0 +1,25 @@
+<div ng-controller="ProductCtrl">
+    <div class="container">
+        <h2>รายการ</h2>
+        <button type="button" ng-click="addSell()" class="btn btn-primary btn-md">เพิ่มรายการขาย</button>
+        <button type="button" ng-click="addBuy()"class="btn btn-primary btn-md">เพิ่มรายการซื้อ</button>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th></th>
+
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr ng-repeat="product in products">
+                <td>{{product.name}}</td>
+                <td>{{product.sellPrice}}</td>
+                <td>{{trans.quantity}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

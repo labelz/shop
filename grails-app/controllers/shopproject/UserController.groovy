@@ -6,8 +6,15 @@ class UserController {
 
     def index() { }
     def login(){
-        def user = [id:1,name:"Test",role:"admin"]
-        def map = [user:user , id:1234]
-        render map as JSON
+        def username = request.JSON.username
+        def password = request.JSON.password
+
+        def user = [id:1,name:"admin",role:"admin"]
+        def adminMap = [user:[id:1,name:"admin",role:"admin"] , id:1234]
+        def userMap = [user:[id:1,name:"user",role:"user"] , id:1234]
+        if(username == 'admin')
+            render adminMap as JSON
+        else if (username =='user')
+            render userMap as JSON
     }
 }

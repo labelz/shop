@@ -25,7 +25,7 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#">Home</a></li>
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">รายงาน<span
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="">รายงาน<span
                                 class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/report_transaction" >รายงานซื้อขาย</a></li>
@@ -37,8 +37,9 @@
                     <li><a ui-sref="roood">Rood</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#" ng-if="currentUser">Welcome, {{ currentUser.name }}</a></li>
-                    <li><a href="#" ng-click="login()"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li><a href="#" ng-if="currentUser">Welcome, {{ currentUser }}</a></li>
+                    <li><a href="#" ng-click="login()" ng-if="!currentUser"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    <li><a href="#" ng-click="logout()" ng-if="currentUser"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
                 </ul>
             </div>
         </div>

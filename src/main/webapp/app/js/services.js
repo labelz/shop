@@ -39,6 +39,25 @@ as.service('WDService', ['$http', function ($http) {
         var url = '/transaction/insert';
         return $http.put(url, data);
     };
+
+    this.createTransaction = function (transaction) {
+
+        var url = '/transactions';
+        return $http.post(url, transaction);
+    };
+
+    this.editTransaction = function (transaction) {
+        var url = '/transactions/';
+        return $http.put(url+transaction.id, transaction);
+    };
+
+    this.deleteProduct = function(id){
+        return $http.delete('/products/'+id);
+    };
+
+    this.deleteTransaction = function(id){
+        return $http.delete('/transactions/'+id);
+    };
 }]);
 
 as.factory('AuthService', function ($http, Session) {
@@ -46,39 +65,63 @@ as.factory('AuthService', function ($http, Session) {
 
     authService.login = function (credentials) {
         return $http
-            .post('/product/login', credentials)
+            .post('/user/login', credentials)
             .then(function (res) {
-                Session.create(res.data.id, res.data.user.id,
+                Session.create(res.data.id, res.data.user.id,res.data.user.name,
                     res.data.user.role);
                 return res.data.user;
             });
     };
+    authService.logout = function(){
+        Session.destroy();
+    };
 
     authService.isAuthenticated = function () {
-        return !!Session.userId;
+        // console.log(Session.getAuthUser().id);
+        return !!Session.getAuthUser().id;
     };
+
+    authService.getUser = function(){
+        return Session.getAuthUser().userName;
+    }
 
     authService.isAuthorized = function (authorizedRoles) {
         if (!angular.isArray(authorizedRoles)) {
             authorizedRoles = [authorizedRoles];
         }
         return (authService.isAuthenticated() &&
-        authorizedRoles.indexOf(Session.userRole) !== -1);
+        authorizedRoles.indexOf(Session.getAuthUser().userRole) !== -1);
     };
 
     return authService;
 });
 
-as.service('Session', function () {
-    this.create = function (sessionId, userId, userRole) {
-        this.id = sessionId;
-        this.userId = userId;
-        this.userRole = userRole;
+as.service('Session', function ($window) {
+    this.getAuthUser = function () {
+        return {
+            id: $window.localStorage.getItem('sessionId'),
+            userId: $window.localStorage.getItem('userId'),
+            userName: $window.localStorage.getItem('userName'),
+            userRole: $window.localStorage.getItem('userRole')
+
+        }
+    };
+
+    this.create = function (sessionId, userId ,userName, userRole) {
+        $window.localStorage.setItem('sessionId', sessionId);
+        $window.localStorage.setItem('userId', userId);
+        $window.localStorage.setItem('userName', userName);
+        $window.localStorage.setItem('userRole', userRole);
+        // console.log($window.localStorage.getItem('userId'));
     };
     this.destroy = function () {
-        this.id = null;
-        this.userId = null;
-        this.userRole = null;
+        $window.localStorage.removeItem('sessionId');
+        $window.localStorage.removeItem('userId');
+        $window.localStorage.removeItem('userName');
+        $window.localStorage.removeItem('userRole');
+        // this.id = null;
+        // this.userId = null;
+        // this.userRole = null;
     };
 });
 

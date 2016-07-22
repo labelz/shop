@@ -1,10 +1,16 @@
 package shopproject
 
 import grails.converters.JSON
+import grails.rest.RestfulController
 import groovy.time.TimeCategory
 
-class TransactionController {
+class TransactionController extends RestfulController{
     def transactionService
+    static responseFormats = ['json', 'xml']
+    TransactionController() {
+        super(Transaction)
+    }
+
     def index() { }
 
     def insert(){
