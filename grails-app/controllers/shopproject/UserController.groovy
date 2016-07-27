@@ -12,9 +12,9 @@ class UserController {
         def user = [id:1,name:"admin",role:"admin"]
         def adminMap = [user:[id:1,name:"admin",role:"admin"] , id:1234]
         def userMap = [user:[id:1,name:"user",role:"user"] , id:1234]
-        if(username == 'admin')
+        if('admin'.equalsIgnoreCase(username))
             render adminMap as JSON
-        else if (username =='user')
+        else if (username.equalsIgnoreCase('user'))
             render userMap as JSON
     }
 }

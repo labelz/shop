@@ -1,4 +1,5 @@
 <div ng-controller="AddSellCtrl">
+
     <div class="form-group">
         <label for="prod">สินค้า:</label>
     <select ng-model="trans.product.id" class="form-control" ng-options="product.id as product.name for product in products" id="prod"></select>
@@ -8,8 +9,12 @@
         <input type="number" ng-model="trans.quantity" class="form-control" id="quan">
     </div>
     <div class="form-group">
-        <label for="price">ราคา:</label>
-        <input type="number" ng-model="trans.sellPrice" class="form-control" id="price">
+        <label for="sprice">ราคาขาย:</label>
+        <input type="number" ng-model="trans.sellPrice" class="form-control" id="sprice">
+    </div>
+    <div class="form-group" ng-if="isAuthorized(userRoles.admin)">
+        <label for="bprice">ราคาซื้อ:</label>
+        <input type="number" ng-model="trans.buyPrice" class="form-control" id="bprice">
     </div>
     <div align="right">
         <button type="button" ng-click="save()" class="btn btn-primary btn-md">เพิ่ม</button>

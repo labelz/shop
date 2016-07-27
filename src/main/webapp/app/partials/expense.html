@@ -1,0 +1,35 @@
+<div ng-controller="ExpenseCtrl">
+    <div class="container">
+        <h2>รายการ</h2>
+        <button type="button" ng-click="add()" class="btn btn-primary btn-md">เพิ่มรายการขาย</button>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr style="font-weight: bold">
+                <td colspan="2">Summary</td>
+                <td colspan="2">{{summary}}</td>
+            </tr>
+            </tfoot>
+            <tbody>
+            <tr ng-repeat="expense in expenses">
+                <td>{{expense.datetime}}</td>
+                <td>{{expense.description}}</td>
+                <td>{{expense.amount}}</td>
+                <td>
+                    <button type="button" ng-click="edit(expense)" class="btn btn-info">
+                        <span class="glyphicon glyphicon-edit"></span> </button>
+                    <button type="button" ng-really-message="ต้องการจะลบ?" ng-really-click="delete(expense)" class="btn btn-info">
+                        <span class="glyphicon glyphicon-trash"></span> </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

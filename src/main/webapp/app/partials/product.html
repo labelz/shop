@@ -1,14 +1,13 @@
 <div ng-controller="ProductCtrl">
     <div class="container">
-        <h2>รายการ</h2>
-        <button type="button" ng-click="addSell()" class="btn btn-primary btn-md">เพิ่มรายการขาย</button>
-        <button type="button" ng-click="addBuy()"class="btn btn-primary btn-md">เพิ่มรายการซื้อ</button>
+        <h2>สินค้า</h2>
+        <button type="button" ng-click="add()" class="btn btn-primary btn-md">เพิ่มสินค้า</button>
         <table class="table table-striped">
             <thead>
             <tr>
                 <th>Product</th>
                 <th>Price</th>
-                <th></th>
+                <th>Action</th>
 
             </tr>
             </thead>
@@ -17,7 +16,12 @@
             <tr ng-repeat="product in products">
                 <td>{{product.name}}</td>
                 <td>{{product.sellPrice}}</td>
-                <td>{{trans.quantity}}</td>
+                <td>
+                    <button type="button" ng-click="edit(product)" class="btn btn-info">
+                        <span class="glyphicon glyphicon-edit"></span> </button>
+                    <button type="button" ng-really-message="ต้องการจะลบ?" ng-really-click="delete(product)" class="btn btn-info">
+                        <span class="glyphicon glyphicon-trash"></span> </button>
+                </td>
             </tr>
             </tbody>
         </table>

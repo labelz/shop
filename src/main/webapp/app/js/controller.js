@@ -4,7 +4,7 @@
 
     var as = angular.module('myApp.controllers', []);
 
-as.controller('MainController', function($scope,$rootScope, AuthService, USER_ROLES,ngDialog) {
+as.controller('MainController', function($scope,$rootScope, AuthService, USER_ROLES,ngDialog,$state) {
     if(!AuthService.isAuthenticated()){
         $rootScope.currentUser = null;
         $scope.userRoles = USER_ROLES;
@@ -59,55 +59,48 @@ as.controller('RooodListCtrl', function($scope) {
 
 });
 
-as.controller('TransactionCtrl', function($scope,WDService,ngDialog) {
-
-    $scope.loadTransaction = function(){
+as.controller('TransactionCtrl', function($scope,WDService,ngDialog,USER_ROLES,AuthService) {
+    $scope.userRoles = USER_ROLES;
+    $scope.isAuthorized = AuthService.isAuthorized;
+    $scope.load = function(){
         WDService.getTransactionTodaySell().then(function(resp){
             $scope.transactions = resp.data;
             $scope.summary = 0;
+            $scope.summaryBuy = 0;
             for(var i = 0; i < resp.data.length; i++){
                 $scope.summary = resp.data[i].sellPrice + $scope.summary
+                $scope.summaryBuy = resp.data[i].buyPrice + $scope.summaryBuy
             }
         });
     }
-
-    $scope.loadTransaction();
-
-
+    $scope.load();
     $scope.addSell = function(){
         ngDialog.open({
             template: 'partials/add_sell.html',
             controller: 'AddSellCtrl',
             preCloseCallback:function(){
-                $scope.loadTransaction();
+                $scope.load();
             }
         });
     }
 
     $scope.edit = function(transaction){
-
-
         $scope.trans = transaction
-
         ngDialog.open({
             template: 'partials/add_sell.html',
             controller: 'AddSellCtrl',
             scope: $scope,
             preCloseCallback:function(){
-                $scope.loadTransaction();
+                $scope.load();
             }
         });
     }
 
     $scope.delete = function(trans){
         WDService.deleteTransaction(trans.id).then(function(resp){
-            $scope.loadTransaction();
+            $scope.load();
         });
     }
-
-    $scope.message = "Rooodroood";
-    $scope.name = '';
-
 });
 
 function getDateString(){
@@ -121,7 +114,10 @@ function getDateString(){
     return yyyy+'-'+mm+'-'+dd+'T'+hour+':'+min+':'+sec+'Z';
 }
 
-as.controller('AddSellCtrl', function($scope,WDService) {
+as.controller('AddSellCtrl', function($scope,WDService,USER_ROLES,AuthService) {
+    $scope.userRoles = USER_ROLES;
+    $scope.isAuthorized = AuthService.isAuthorized;
+
     if($scope.trans){
         $scope.mode = 'edit';
     }else{
@@ -129,7 +125,7 @@ as.controller('AddSellCtrl', function($scope,WDService) {
     }
     WDService.getProduct().then(function(resp){
         $scope.products = resp.data;
-        $scope.selectedProduct = resp.data[1].id;
+        $scope.trans.product.id = resp.data[1].id;
     });
 
     $scope.save = function(){
@@ -144,9 +140,6 @@ as.controller('AddSellCtrl', function($scope,WDService) {
                 $scope.closeThisDialog('');
             });
         }
-        // WDService.saveTransaction($scope.selectedProduct,0,$scope.quantity,$scope.price).then(function(resp){
-        //     $scope.closeThisDialog('');
-        // });
     }
 });
 
@@ -175,4 +168,133 @@ as.controller('ReportTransactionCtrl', function($scope,WDService) {
     }
 
     $scope.loadTransaction();
+});
+
+as.controller('ProductCtrl', function($scope,WDService,ngDialog) {
+    console.log(new Date());
+    $scope.load = function(){
+        WDService.getProduct().then(function(resp){
+            $scope.products = resp.data;
+
+        });
+    }
+
+    $scope.load();
+
+    $scope.add = function(){
+        ngDialog.open({
+            template: 'partials/add_product.html',
+            controller: 'AddProductCtrl',
+            preCloseCallback:function(){
+                $scope.load();
+            }
+        });
+    }
+
+    $scope.edit = function(product){
+        $scope.product = product
+
+        ngDialog.open({
+            template: 'partials/add_product.html',
+            controller: 'AddProductCtrl',
+            scope: $scope,
+            preCloseCallback:function(){
+                $scope.load();
+            }
+        });
+    }
+
+    $scope.delete = function(product){
+        WDService.deleteProduct(product.id).then(function(resp){
+            $scope.load();
+        });
+    }
+
+});
+
+as.controller('AddProductCtrl', function($scope,WDService) {
+    if($scope.product){
+        $scope.mode = 'edit';
+    }else{
+        $scope.mode = 'new';
+    }
+
+    $scope.save = function(){
+        if($scope.mode=='new') {
+            WDService.createProduct($scope.product).then(function (resp) {
+                $scope.closeThisDialog('');
+            });
+        }else{
+            WDService.editProduct($scope.product).then(function (resp) {
+                $scope.closeThisDialog('');
+            });
+        }
+    }
+});
+
+as.controller('ExpenseCtrl', function($scope,WDService,ngDialog) {
+
+    $scope.load = function(){
+        WDService.getExpenseToday().then(function(resp){
+            $scope.expenses = resp.data;
+            $scope.summary = 0;
+            for(var i = 0; i < resp.data.length; i++){
+                $scope.summary = resp.data[i].amount + $scope.summary
+            }
+        });
+    }
+    $scope.load();
+    $scope.add = function(){
+        ngDialog.open({
+            template: 'partials/add_expense.html',
+            controller: 'AddExpenseCtrl',
+            preCloseCallback:function(){
+                $scope.load();
+            }
+        });
+    }
+
+    $scope.edit = function(expense){
+        $scope.expense = expense
+        ngDialog.open({
+            template: 'partials/add_expense.html',
+            controller: 'AddExpenseCtrl',
+            scope: $scope,
+            preCloseCallback:function(){
+                $scope.load();
+            }
+        });
+    }
+
+    $scope.delete = function(expense){
+        WDService.deleteExpense(expense.id).then(function(resp){
+            $scope.load();
+        });
+    }
+});
+
+as.controller('AddExpenseCtrl', function($scope,WDService) {
+    if($scope.expense){
+        $scope.mode = 'edit';
+    }else{
+        $scope.mode = 'new';
+    }
+
+    $scope.save = function(){
+        if($scope.mode=='new') {
+            $scope.expense.datetime = getDateString();
+            WDService.createExpense($scope.expense).then(function (resp) {
+                $scope.closeThisDialog('');
+            });
+        }else{
+            $scope.expense.datetime = getDateString();
+            WDService.editExpense($scope.expense).then(function (resp) {
+                $scope.closeThisDialog('');
+            });
+        }
+    }
+});
+
+as.controller('DashboardCtrl', function($scope,WDService) {
+
 });

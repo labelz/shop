@@ -4,60 +4,71 @@
 var as = angular.module('myApp.services', []);
 
 as.service('WDService', ['$http', function ($http) {
-    this.gettest = function (rfid) {
-        var url = '/transaction/get';
-        return $http.get(url, {
-            params: {
-                rfid: rfid
-            }
-        });
-    };
+
     this.getProduct = function () {
-        var url = '/product/get';
+        var url = '/shop/product/get';
         return $http.get(url);
         // return list of item_id of that session
     };
 
     this.getTransaction = function () {
-        var url = '/transaction/get';
+        var url = '/shop/transaction/get';
         return $http.get(url);
         // return list of item_id of that session
     };
 
     this.getTransactionTodaySell = function () {
-        var url = '/transaction/getTodaySell';
+        var url = '/shop/transaction/getTodaySell';
         return $http.get(url);
         // return list of item_id of that session
     };
-    this.saveTransaction = function (productId, buyPrice, quantity, sellPrice) {
-        var data = {
-            productId: productId,
-            buyPrice: buyPrice,
-            quantity: quantity,
-            sellPrice: sellPrice
-        };
-        var url = '/transaction/insert';
-        return $http.put(url, data);
-    };
 
     this.createTransaction = function (transaction) {
-
-        var url = '/transactions';
+        var url = '/shop/transactions';
         return $http.post(url, transaction);
     };
 
     this.editTransaction = function (transaction) {
-        var url = '/transactions/';
+        var url = '/shop/transactions/';
         return $http.put(url+transaction.id, transaction);
     };
 
-    this.deleteProduct = function(id){
-        return $http.delete('/products/'+id);
+    this.deleteTransaction = function(id){
+        return $http.delete('/shop/transactions/'+id);
     };
 
-    this.deleteTransaction = function(id){
-        return $http.delete('/transactions/'+id);
+    this.createProduct = function (product) {
+        var url = '/shop/products';
+        return $http.post(url, product);
     };
+
+    this.editProduct = function (product) {
+        var url = '/shop/products/';
+        return $http.put(url+product.id, product);
+    };
+
+    this.deleteProduct = function(id){
+        return $http.delete('/shop/products/'+id);
+    };
+    this.getExpenseToday = function () {
+        var url = '/shop/expense/getToday';
+        return $http.get(url);
+        // return list of item_id of that session
+    };
+    this.createExpense = function (expense) {
+        var url = '/shop/expenses';
+        return $http.post(url, expense);
+    };
+
+    this.editExpense = function (expense) {
+        var url = '/shop/expenses/';
+        return $http.put(url+expense.id, expense);
+    };
+
+    this.deleteExpense = function(id){
+        return $http.delete('/shop/expenses/'+id);
+    };
+
 }]);
 
 as.factory('AuthService', function ($http, Session) {
@@ -65,7 +76,7 @@ as.factory('AuthService', function ($http, Session) {
 
     authService.login = function (credentials) {
         return $http
-            .post('/user/login', credentials)
+            .post('/shop/user/login', credentials)
             .then(function (res) {
                 Session.create(res.data.id, res.data.user.id,res.data.user.name,
                     res.data.user.role);
@@ -86,6 +97,7 @@ as.factory('AuthService', function ($http, Session) {
     }
 
     authService.isAuthorized = function (authorizedRoles) {
+       
         if (!angular.isArray(authorizedRoles)) {
             authorizedRoles = [authorizedRoles];
         }

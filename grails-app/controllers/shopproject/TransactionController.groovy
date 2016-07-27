@@ -53,4 +53,6 @@ class TransactionController extends RestfulController{
             render transactionService.getPeriodSell(startDate,endDate) as JSON
         }
     }
+
+
 }

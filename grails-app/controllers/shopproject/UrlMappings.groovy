@@ -8,6 +8,7 @@ class UrlMappings {
                 // apply constraints here
             }
         }
+        "/expenses"(resources:"expense")
         "/products"(resources:"product")
         "/transactions"(resources:"transaction")
         "/"(view:"/index")

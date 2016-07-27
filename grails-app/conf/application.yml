@@ -10,33 +10,63 @@ dataSource:
     pooled: true
     jmxExport: true
     driverClassName: com.mysql.jdbc.Driver
-    dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    dialect: dialect.MySQLUTF8InnoDBDialect
 
 environments:
-     development:
-            dataSource:
-                dbCreate: update
-                url: jdbc:mysql://localhost:3306/shop?createDatabaseIfNotExist=true&amp;useUnicode=yes&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;engine=InnoDB&amp;connectionCollation=utf8_unicode_ci;
-                username: root
-                password: root
-                properties:
-                    jmxEnabled: true
-                    initialSize: 5
-                    maxActive: 50
-                    minIdle: 5
-                    maxIdle: 25
-                    maxWait: 10000
-                    maxAge: 600000
-                    timeBetweenEvictionRunsMillis: 5000
-                    minEvictableIdleTimeMillis: 60000
-                    validationQuery: SELECT 1
-                    validationQueryTimeout: 3
-                    validationInterval: 15000
-                    testOnBorrow: true
-                    testWhileIdle: true
-                    testOnReturn: false
-                    jdbcInterceptors: ConnectionState
-                    defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+    development:
+        dataSource:
+            dbCreate: update
+            url: jdbc:mysql://localhost:3306/shop?createDatabaseIfNotExist=true&amp;useUnicode=yes&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;engine=InnoDB&amp;connectionCollation=utf8_unicode_ci;
+            username: root
+            password: root
+            properties:
+                jmxEnabled: true
+                initialSize: 5
+                maxActive: 50
+                minIdle: 5
+                maxIdle: 25
+                maxWait: 10000
+                maxAge: 600000
+                timeBetweenEvictionRunsMillis: 5000
+                minEvictableIdleTimeMillis: 60000
+                validationQuery: SELECT 1
+                validationQueryTimeout: 3
+                validationInterval: 15000
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: false
+                jdbcInterceptors: ConnectionState
+                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+        server:
+            contextPath: '/shop'
+    test:
+        dataSource:
+            dbCreate: update
+            url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+    production:
+        dataSource:
+            dbCreate: update
+            url: jdbc:mysql://localhost:3306/shop?createDatabaseIfNotExist=true&amp;useUnicode=yes&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;engine=InnoDB&amp;connectionCollation=utf8_unicode_ci;
+            username: achira
+            password: privatedb
+            properties:
+                jmxEnabled: true
+                initialSize: 5
+                maxActive: 50
+                minIdle: 5
+                maxIdle: 25
+                maxWait: 10000
+                maxAge: 600000
+                timeBetweenEvictionRunsMillis: 5000
+                minEvictableIdleTimeMillis: 60000
+                validationQuery: SELECT 1
+                validationQueryTimeout: 3
+                validationInterval: 15000
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: false
+                jdbcInterceptors: ConnectionState
+                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
 
 ---
 ---

@@ -8,4 +8,7 @@ class Stock {
     Date date
     static constraints = {
     }
+    static mapping = {
+        sort date: "desc"
+    }
 }
