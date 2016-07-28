@@ -2,6 +2,7 @@
     <div class="container">
         <h2>รายการ</h2>
         <button type="button" ng-click="addSell()" class="btn btn-primary btn-md">เพิ่มรายการขาย</button>
+        <button type="button" ng-click="stock()" class="btn btn-primary btn-md">ปิดยอด</button>
         <table ng-if="isAuthorized(userRoles.admin)" class="table table-striped">
             <thead>
             <tr>
@@ -28,9 +29,10 @@
                 <td>{{trans.sellPrice}}</td>
                 <td>{{trans.buyPrice}}</td>
                 <td>
-                    <button type="button" ng-click="edit(trans)" class="btn btn-info">
+                    <button type="button" ng-click="edit(trans)" class="btn btn-info" ng-if="!trans.isStocked">
                         <span class="glyphicon glyphicon-edit"></span> </button>
-                    <button type="button" ng-really-message="ต้องการจะลบ?" ng-really-click="delete(trans)" class="btn btn-info">
+                    <button type="button" ng-really-message="ต้องการจะลบ?" ng-really-click="delete(trans)"
+                            class="btn btn-info" ng-if="!trans.isStocked">
                     <span class="glyphicon glyphicon-trash"></span> </button>
                 </td>
             </tr>

@@ -26,6 +26,13 @@ myApp.config(function ($stateProvider, USER_ROLES,$urlRouterProvider) {
                 authorizedRoles: [ USER_ROLES.admin]
             }
         })
+        .state('stock', {
+            url: '/stock',
+            templateUrl: 'partials/stock.html',
+            data: {
+                authorizedRoles: [USER_ROLES.admin]
+            }
+        })
         
         .state('roood', {
             url: '/roood',

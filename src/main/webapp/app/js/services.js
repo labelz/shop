@@ -5,6 +5,23 @@ var as = angular.module('myApp.services', []);
 
 as.service('WDService', ['$http', function ($http) {
 
+    this.updateStock = function () {
+        var url = '/shop/stock/updateStock';
+        return $http.get(url);
+        // return list of item_id of that session
+    };
+    this.getLatestStock = function () {
+        var url = '/shop/stock/getLatest';
+        return $http.get(url);
+        // return list of item_id of that session
+    };
+
+    this.addStock = function (stock) {
+        var url = '/shop/stock/addStock';
+        return $http.post(url, stock);
+        // return list of item_id of that session
+    };
+
     this.getProduct = function () {
         var url = '/shop/product/get';
         return $http.get(url);

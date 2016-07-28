@@ -101,6 +101,12 @@ as.controller('TransactionCtrl', function($scope,WDService,ngDialog,USER_ROLES,A
             $scope.load();
         });
     }
+
+    $scope.stock = function () {
+        WDService.updateStock().then(function (resp) {
+            $scope.load();
+        });
+    }
 });
 
 function getDateString(){
@@ -114,7 +120,7 @@ function getDateString(){
     return yyyy+'-'+mm+'-'+dd+'T'+hour+':'+min+':'+sec+'Z';
 }
 
-as.controller('AddSellCtrl', function($scope,WDService,USER_ROLES,AuthService) {
+as.controller('AddSellCtrl', function ($scope, WDService, USER_ROLES, AuthService, $parse) {
     $scope.userRoles = USER_ROLES;
     $scope.isAuthorized = AuthService.isAuthorized;
 
@@ -125,8 +131,22 @@ as.controller('AddSellCtrl', function($scope,WDService,USER_ROLES,AuthService) {
     }
     WDService.getProduct().then(function(resp){
         $scope.products = resp.data;
-        $scope.trans.product.id = resp.data[1].id;
+        var the_string = 'trans.product.id';
+        var model = $parse(the_string);
+        model.assign($scope, resp.data[1].id);
+        $scope.productMap = new Object();
+        $scope.trans.quantity = 1;
+        $scope.trans.sellPrice = resp.data[1].sellPrice;
+        angular.forEach($scope.products, function (value, key) {
+            $scope.productMap[value.id] = value.sellPrice
+        });
+
+        // $scope.trans.product.id = resp.data[1].id;
     });
+
+    $scope.change = function () {
+        $scope.trans.sellPrice = $scope.trans.quantity * $scope.productMap[$scope.trans.product.id];
+    }
 
     $scope.save = function(){
         if($scope.mode=='new') {
@@ -295,6 +315,35 @@ as.controller('AddExpenseCtrl', function($scope,WDService) {
     }
 });
 
-as.controller('DashboardCtrl', function($scope,WDService) {
+as.controller('StockCtrl', function ($scope, WDService, ngDialog) {
+    $scope.load = function () {
+        WDService.getLatestStock().then(function (resp) {
+            console.log(resp.data[0][1])
+            $scope.stocks = resp.data;
 
+        });
+    }
+    $scope.load();
+
+    $scope.add = function () {
+        ngDialog.open({
+            template: 'partials/add_stock.html',
+            controller: 'AddStockCtrl',
+            preCloseCallback: function () {
+                $scope.load();
+            }
+        });
+    }
+});
+
+as.controller('AddStockCtrl', function ($scope, WDService) {
+    WDService.getProduct().then(function (resp) {
+        $scope.products = resp.data;
+        
+    });
+    $scope.save = function () {
+        WDService.addStock($scope.stock).then(function (resp) {
+            $scope.closeThisDialog('');
+        });
+    }
 });

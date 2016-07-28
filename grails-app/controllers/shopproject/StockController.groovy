@@ -7,19 +7,22 @@ class StockController {
     def index() { }
 
     def updateStock(){
-        def today = new Date().clearTime()
-        def stockDate = stockService.getLatestStockDate()
-        if(today == stockDate.clearTime()){
-            render "Stock already Updated"
-        }else{
-            stockService.updateStock()
-            render "Success"
-        }
+        stockService.updateStock()
     }
 
     def getLatest(){
+//        render "test"
+
         JSON.use('deep'){
             render stockService.getLatestStock() as JSON
         }
+    }
+
+    def addStock() {
+        def stock = new Stock()
+        stock.product = new Product()
+        stock.product.id = request.JSON.product.id
+        stock.quantity = request.JSON.quantity
+        stockService.addStock(stock)
     }
 }
