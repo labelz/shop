@@ -1,6 +1,6 @@
 package shopproject
 
-class User {
+class UserTest {
     String username
     String password
     String role
