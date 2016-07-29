@@ -38,7 +38,7 @@ as.controller('LoginCtrl', function($scope, $rootScope, AUTH_EVENTS, AuthService
     $scope.login = function (credentials) {
         AuthService.login(credentials).then(function (user) {
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-            $rootScope.currentUser = user.name;
+            $rootScope.currentUser = user;
             $scope.closeThisDialog('');
         }, function () {
             $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
@@ -123,7 +123,6 @@ function getDateString(){
 as.controller('AddSellCtrl', function ($scope, WDService, USER_ROLES, AuthService, $parse) {
     $scope.userRoles = USER_ROLES;
     $scope.isAuthorized = AuthService.isAuthorized;
-
     if($scope.trans){
         $scope.mode = 'edit';
     }else{

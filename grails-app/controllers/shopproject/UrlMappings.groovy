@@ -11,7 +11,7 @@ class UrlMappings {
         "/expenses"(resources:"expense")
         "/products"(resources:"product")
         "/transactions"(resources:"transaction")
-        "/"(view:"/index")
+//        "/"(view:"/index")
         "500"(view:'/error')
         "404"(view:'/notFound')
 //        "/"(uri: "/static/app/index.html")

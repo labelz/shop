@@ -93,11 +93,16 @@ as.factory('AuthService', function ($http, Session) {
 
     authService.login = function (credentials) {
         return $http
-            .post('/shop/user/login', credentials)
+            .post('/shop/api/login', credentials)
             .then(function (res) {
-                Session.create(res.data.id, res.data.user.id,res.data.user.name,
-                    res.data.user.role);
-                return res.data.user;
+                console.log(res.data.roles);
+                for (var i = 0; i < res.data.roles.length; i++) {
+                    console.log(res.data.roles[i]);
+
+                }
+                Session.create(res.data.access_token, res.data.refresh_token,res.data.username,
+                    res.data.roles);
+                return res.data.username;
             });
     };
     authService.logout = function(){
@@ -118,8 +123,25 @@ as.factory('AuthService', function ($http, Session) {
         if (!angular.isArray(authorizedRoles)) {
             authorizedRoles = [authorizedRoles];
         }
-        return (authService.isAuthenticated() &&
-        authorizedRoles.indexOf(Session.getAuthUser().userRole) !== -1);
+        // console.log(authorizedRoles);
+        if(authService.isAuthenticated()) {
+            if (authorizedRoles.indexOf('*') == -1) {
+                var userRole = Session.getAuthUser().userRole.split(',');
+                for (var i = 0; i < userRole.length; i++) {
+
+                    if (authorizedRoles.indexOf(userRole[i]) !== -1) {
+                        return true;
+                    }
+                }
+            } else {
+                return true;
+            }
+        }else{
+            return false;
+        }
+        return false;
+
+        // return (authService.isAuthenticated() && checkAuthorized);
     };
 
     return authService;

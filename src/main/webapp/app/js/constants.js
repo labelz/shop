@@ -14,7 +14,6 @@ as.constant('AUTH_EVENTS', {
 
 as.constant('USER_ROLES', {
     all: '*',
-    admin: 'admin',
-    editor: 'editor',
-    user: 'user'
+    admin: 'ROLE_ADMIN',
+    user: 'ROLE_USER'
 });

@@ -9,7 +9,7 @@ myApp.config(function ($stateProvider, USER_ROLES,$urlRouterProvider) {
             url: '/transaction',
             templateUrl: 'partials/transaction.html',
             data: {
-                authorizedRoles: [USER_ROLES.admin, USER_ROLES.user]
+                authorizedRoles: [USER_ROLES.all]
             }
         })
         .state('product', {
